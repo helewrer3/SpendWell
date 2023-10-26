@@ -1,10 +1,9 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE users (
+CREATE TABLE transaction_types (
   id UUID PRIMARY KEY,
   name VARCHAR(256) NOT NULL UNIQUE,
-  password VARCHAR(256) NOT NULL,
-  salt VARCHAR(256) NOT NULL,
+  description VARCHAR(256) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL
 );
@@ -12,5 +11,5 @@ CREATE TABLE users (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE users;
+DROP TABLE transaction_types;
 -- +goose StatementEnd

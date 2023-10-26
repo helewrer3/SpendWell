@@ -1,10 +1,9 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE users (
+CREATE TABLE images (
   id UUID PRIMARY KEY,
   name VARCHAR(256) NOT NULL UNIQUE,
-  password VARCHAR(256) NOT NULL,
-  salt VARCHAR(256) NOT NULL,
+  image_path VARCHAR(256) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL
 );
@@ -12,5 +11,5 @@ CREATE TABLE users (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE users;
+DROP TABLE images;
 -- +goose StatementEnd
