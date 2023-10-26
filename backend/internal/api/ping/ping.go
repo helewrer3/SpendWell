@@ -11,6 +11,5 @@ func initRoutes(pingRouter *chi.Mux){
 func InitPing(router *chi.Mux){
 	pingRouter := chi.NewRouter()
 	initRoutes(pingRouter)
-
 	router.Mount("/ping", pingRouter)
 }

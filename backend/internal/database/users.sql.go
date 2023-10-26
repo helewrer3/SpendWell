@@ -10,23 +10,25 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (name, password, created_at, updated_at)
-VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-RETURNING id, name, password, created_at, updated_at
+INSERT INTO users (id, name, password, salt, created_at, updated_at)
+VALUES (lower(hex(randomblob(16))), ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+RETURNING id, name, password, salt, created_at, updated_at
 `
 
 type CreateUserParams struct {
 	Name     string
 	Password string
+	Salt     string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.Name, arg.Password)
+	row := q.db.QueryRowContext(ctx, createUser, arg.Name, arg.Password, arg.Salt)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.Password,
+		&i.Salt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -34,26 +36,40 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, name, password, created_at, updated_at FROM users
+SELECT id, name, password, salt, created_at, updated_at FROM users
 WHERE id = ? 
 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
+func (q *Queries) GetUser(ctx context.Context, id interface{}) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUser, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.Password,
+		&i.Salt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
 	return i, err
 }
 
+const getUserSalt = `-- name: GetUserSalt :one
+SELECT salt FROM users
+where name = ?
+LIMIT 1
+`
+
+func (q *Queries) GetUserSalt(ctx context.Context, name string) (string, error) {
+	row := q.db.QueryRowContext(ctx, getUserSalt, name)
+	var salt string
+	err := row.Scan(&salt)
+	return salt, err
+}
+
 const verifyUser = `-- name: VerifyUser :one
-SELECT id, name, password, created_at, updated_at FROM users
+SELECT id, name, password, salt, created_at, updated_at FROM users
 WHERE name = ? AND password = ? 
 LIMIT 1
 `
@@ -70,6 +86,7 @@ func (q *Queries) VerifyUser(ctx context.Context, arg VerifyUserParams) (User, e
 		&i.ID,
 		&i.Name,
 		&i.Password,
+		&i.Salt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

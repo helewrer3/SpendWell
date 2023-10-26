@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/helewrer3/SpendWell/backend/internal/api/auth"
+	"github.com/helewrer3/SpendWell/backend/internal/api/data/images"
 	"github.com/helewrer3/SpendWell/backend/internal/api/ping"
 	"github.com/helewrer3/SpendWell/backend/internal/sql"
 	"github.com/joho/godotenv"
@@ -25,6 +26,7 @@ func main() {
 
 	ping.InitPing(router)
 	auth.InitAuth(router)
+	images.InitImages(router)
 
 	http.ListenAndServe(":" + os.Getenv("PORT"), router)
 }

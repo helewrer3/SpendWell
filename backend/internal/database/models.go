@@ -8,10 +8,59 @@ import (
 	"time"
 )
 
+type Account struct {
+	ID        interface{}
+	Name      string
+	Amount    int64
+	UserID    interface{}
+	ImageID   interface{}
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Category struct {
+	ID        interface{}
+	Name      string
+	UserID    interface{}
+	ImageID   interface{}
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Image struct {
+	ID        interface{}
+	Name      string
+	ImagePath string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Record struct {
+	ID                interface{}
+	Amount            int64
+	Description       string
+	UserID            interface{}
+	CategoryID        interface{}
+	TransactionTypeID interface{}
+	FromAccountID     interface{}
+	ToAccountID       interface{}
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+}
+
+type TransactionType struct {
+	ID          interface{}
+	Name        string
+	Description string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
 type User struct {
-	ID        int64
+	ID        interface{}
 	Name      string
 	Password  string
+	Salt      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
