@@ -47,10 +47,11 @@ func (q *Queries) DeleteCategory(ctx context.Context, id interface{}) error {
 
 const getCategories = `-- name: GetCategories :many
 SELECT id, name, user_id, image_id, created_at, updated_at FROM categories
+WHERE user_id = ?
 `
 
-func (q *Queries) GetCategories(ctx context.Context) ([]Category, error) {
-	rows, err := q.db.QueryContext(ctx, getCategories)
+func (q *Queries) GetCategories(ctx context.Context, userID interface{}) ([]Category, error) {
+	rows, err := q.db.QueryContext(ctx, getCategories, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -79,9 +80,31 @@ func (q *Queries) GetCategories(ctx context.Context) ([]Category, error) {
 	return items, nil
 }
 
+const getCategory = `-- name: GetCategory :one
+SELECT id, name, user_id, image_id, created_at, updated_at FROM categories
+WHERE id = ?
+`
+
+func (q *Queries) GetCategory(ctx context.Context, id interface{}) (Category, error) {
+	row := q.db.QueryRowContext(ctx, getCategory, id)
+	var i Category
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.UserID,
+		&i.ImageID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const updateCategory = `-- name: UpdateCategory :exec
 UPDATE accounts
-SET name = COALESCE(?, name), image_id = COALESCE(?, image_id), updated_at = CURRENT_TIMESTAMP
+SET 
+  name = ?, 
+  image_id = ?, 
+  updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
 

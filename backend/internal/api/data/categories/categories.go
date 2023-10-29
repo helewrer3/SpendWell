@@ -5,13 +5,14 @@ import (
 )
 
 func initRoutes(categoriesRouter *chi.Mux){
-	categoriesRouter.Get("/", getCategories)
-	categoriesRouter.Delete("/{id:[0-9a-f\\-]+}", deleteCategory)
 	categoriesRouter.Post("/", createCategory)
+	categoriesRouter.Get("/{userId:[0-9a-f\\-]+}", getCategories)
+	categoriesRouter.Get("/{id:[0-9a-f\\-]+}", getCategory)
 	categoriesRouter.Put("/{id:[0-9a-f\\-]+}", updateCategory)
+	categoriesRouter.Delete("/{id:[0-9a-f\\-]+}", deleteCategory)
 }
 
-func InitImages(router *chi.Mux){
+func Init(router *chi.Mux){
 	categoriesRouter := chi.NewRouter()
 	initRoutes(categoriesRouter)
 	router.Mount("/categories", categoriesRouter)

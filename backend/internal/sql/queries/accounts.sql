@@ -6,9 +6,9 @@ RETURNING *;
 -- name: UpdateAccount :exec
 UPDATE accounts
 SET 
-  name = COALESCE(?, name), 
-  amount = COALESCE(?, amount), 
-  image_id = COALESCE(?, image_id), 
+  name = ?, 
+  amount = ?, 
+  image_id = ?, 
   updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
@@ -22,4 +22,5 @@ where id = ?
 LIMIT 1;
 
 -- name: GetAccounts :many
-SELECT * FROM accounts;
+SELECT * FROM accounts
+WHERE user_id = ?;

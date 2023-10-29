@@ -5,7 +5,10 @@ RETURNING *;
 
 -- name: UpdateCategory :exec
 UPDATE accounts
-SET name = COALESCE(?, name), image_id = COALESCE(?, image_id), updated_at = CURRENT_TIMESTAMP
+SET 
+  name = ?, 
+  image_id = ?, 
+  updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: DeleteCategory :exec
@@ -13,4 +16,9 @@ DELETE FROM categories
 WHERE id = ?;
 
 -- name: GetCategories :many
-SELECT * FROM categories;
+SELECT * FROM categories
+WHERE user_id = ?;
+
+-- name: GetCategory :one
+SELECT * FROM categories
+WHERE id = ?;

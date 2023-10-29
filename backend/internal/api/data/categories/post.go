@@ -11,8 +11,8 @@ import (
 
 func createCategory(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
-		Name string `json:"name"`
-		UserID string `json:"userId"`
+		Name 		string `json:"name"`
+		UserID 	string `json:"userId"`
 		ImageID string `json:"imageId"`
 	}
 	params := parameters{}
@@ -24,9 +24,9 @@ func createCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	category, err := sql.Queries.CreateCategory(r.Context(), database.CreateCategoryParams{
-		Name: params.Name,
-		UserID: params.UserID,
-		ImageID: params.ImageID,
+		Name: 		params.Name,
+		UserID: 	params.UserID,
+		ImageID: 	params.ImageID,
 	})
 	if err != nil {
 		api.SendResponse(w, http.StatusInternalServerError, "error", err.Error())

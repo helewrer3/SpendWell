@@ -10,7 +10,7 @@ func initRoutes(imagesRouter *chi.Mux){
 	imagesRouter.Get("/{id:[0-9a-f\\-]+}", getImageMetaData)
 }
 
-func InitImages(router *chi.Mux){
+func Init(router *chi.Mux){
 	imagesRouter := chi.NewRouter()
 	initRoutes(imagesRouter)
 	router.Mount("/images", imagesRouter)

@@ -75,10 +75,11 @@ func (q *Queries) GetAccount(ctx context.Context, id interface{}) (Account, erro
 
 const getAccounts = `-- name: GetAccounts :many
 SELECT id, name, amount, user_id, image_id, created_at, updated_at FROM accounts
+WHERE user_id = ?
 `
 
-func (q *Queries) GetAccounts(ctx context.Context) ([]Account, error) {
-	rows, err := q.db.QueryContext(ctx, getAccounts)
+func (q *Queries) GetAccounts(ctx context.Context, userID interface{}) ([]Account, error) {
+	rows, err := q.db.QueryContext(ctx, getAccounts, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -111,9 +112,9 @@ func (q *Queries) GetAccounts(ctx context.Context) ([]Account, error) {
 const updateAccount = `-- name: UpdateAccount :exec
 UPDATE accounts
 SET 
-  name = COALESCE(?, name), 
-  amount = COALESCE(?, amount), 
-  image_id = COALESCE(?, image_id), 
+  name = ?, 
+  amount = ?, 
+  image_id = ?, 
   updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `

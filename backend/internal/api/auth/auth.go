@@ -10,7 +10,7 @@ func initRoutes(authRouter *chi.Mux){
 	authRouter.Get("/{id:[0-9a-f\\-]+}", getUser)
 }
 
-func InitAuth(router *chi.Mux){
+func Init(router *chi.Mux){
 	authRouter := chi.NewRouter()
 	initRoutes(authRouter)
 	router.Mount("/auth", authRouter)

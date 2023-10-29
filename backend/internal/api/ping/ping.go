@@ -8,7 +8,7 @@ func initRoutes(pingRouter *chi.Mux){
 	pingRouter.Get("/", ping)
 }
 
-func InitPing(router *chi.Mux){
+func Init(router *chi.Mux){
 	pingRouter := chi.NewRouter()
 	initRoutes(pingRouter)
 	router.Mount("/ping", pingRouter)

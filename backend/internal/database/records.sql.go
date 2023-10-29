@@ -61,12 +61,36 @@ func (q *Queries) DeleteRecord(ctx context.Context, id interface{}) error {
 	return err
 }
 
-const getRecords = `-- name: GetRecords :many
+const getRecord = `-- name: GetRecord :one
 SELECT id, amount, description, user_id, category_id, transaction_type_id, from_account_id, to_account_id, created_at, updated_at FROM records
+WHERE id = ?
 `
 
-func (q *Queries) GetRecords(ctx context.Context) ([]Record, error) {
-	rows, err := q.db.QueryContext(ctx, getRecords)
+func (q *Queries) GetRecord(ctx context.Context, id interface{}) (Record, error) {
+	row := q.db.QueryRowContext(ctx, getRecord, id)
+	var i Record
+	err := row.Scan(
+		&i.ID,
+		&i.Amount,
+		&i.Description,
+		&i.UserID,
+		&i.CategoryID,
+		&i.TransactionTypeID,
+		&i.FromAccountID,
+		&i.ToAccountID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getRecords = `-- name: GetRecords :many
+SELECT id, amount, description, user_id, category_id, transaction_type_id, from_account_id, to_account_id, created_at, updated_at FROM records
+WHERE user_id = ?
+`
+
+func (q *Queries) GetRecords(ctx context.Context, userID interface{}) ([]Record, error) {
+	rows, err := q.db.QueryContext(ctx, getRecords, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -102,12 +126,12 @@ func (q *Queries) GetRecords(ctx context.Context) ([]Record, error) {
 const updateRecord = `-- name: UpdateRecord :exec
 UPDATE records
 SET 
-  description = COALESCE(?, description), 
-  amount = COALESCE(?, amount), 
-  category_id = COALESCE(?, category_id), 
-  transaction_type_id = COALESCE(?, transaction_type_id), 
-  from_account_id = COALESCE(?, from_account_id), 
-  to_account_id = COALESCE(?, to_account_id), 
+  description = ?, 
+  amount = ?, 
+  category_id = ?, 
+  transaction_type_id = ?, 
+  from_account_id = ?, 
+  to_account_id = ?, 
   updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
