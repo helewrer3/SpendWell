@@ -36,5 +36,5 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	api.SendResponse(w, http.StatusOK, "ok", user)
+	api.SendResponse(w, http.StatusOK, "ok", user.ID)
 }
