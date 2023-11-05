@@ -5,11 +5,10 @@ import {Formik} from 'formik';
 
 import {initSignupValues, signupValidationSchema} from './utils/helper';
 import {useAuthDispatch} from '../../../contexts/auth';
-import {CHANGE_AUTH} from '../../../contexts/auth/type';
 import {postRequest} from '../../../utils/http';
-import {storeSession} from '../../../utils/localStorage';
+import {changeAuth} from '../../../contexts/auth/action';
 
-const SignupScreen = ({navigation}: any): JSX.Element => {
+const SignupScreen = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAuthDispatch();
 
@@ -19,108 +18,116 @@ const SignupScreen = ({navigation}: any): JSX.Element => {
     confirmPassword: string;
   }) => {
     setIsLoading(true);
-    const userId = await postRequest({
-      url: 'auth',
-      body: {name: values.name, password: values.password},
-    });
-    await storeSession({name: 'auth_token', data: {value: userId}});
-    dispatch({type: CHANGE_AUTH, isSignedIn: true, token: userId});
+    try {
+      const userId = await postRequest({
+        url: 'auth',
+        body: {name: values.name, password: values.password},
+      });
+      await changeAuth(dispatch, userId);
+    } catch (error) {
+      console.error(error);
+    }
     setIsLoading(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.section}>
-        <View style={styles.subSection}>
-          <Text variant="headlineLarge">Namaste 🙏</Text>
-        </View>
-        <Formik
-          initialValues={initSignupValues}
-          validationSchema={signupValidationSchema}
-          onSubmit={onFormSubmit}>
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-          }) => (
-            <>
-              <View style={styles.subSection}>
-                <TextInput
-                  label="Name"
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                  error={!!(touched.name && errors.name)}
-                />
-                {touched.name && errors.name && (
-                  <Text style={styles.errorText}>{errors.name}</Text>
-                )}
-              </View>
-
-              <View style={styles.subSection}>
-                <TextInput
-                  label="Password"
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
-                  secureTextEntry
-                  error={!!(touched.password && errors.password)}
-                />
-                {touched.password && errors.password && (
-                  <Text style={styles.errorText}>{errors.password}</Text>
-                )}
-              </View>
-
-              <View style={styles.subSection}>
-                <TextInput
-                  label="Confirm Password"
-                  onChangeText={handleChange('confirmPassword')}
-                  onBlur={handleBlur('confirmPassword')}
-                  value={values.confirmPassword}
-                  secureTextEntry
-                  error={!!(touched.confirmPassword && errors.confirmPassword)}
-                />
-                {touched.confirmPassword && errors.confirmPassword && (
-                  <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-                )}
-              </View>
-
-              <View style={styles.subSection}>
-                <Button onPress={() => handleSubmit()} disabled={isLoading}>
-                  {isLoading ? (
-                    <ActivityIndicator animating={true} />
-                  ) : (
-                    <Text variant="bodyLarge">Signup 📚</Text>
-                  )}
-                </Button>
-              </View>
-            </>
-          )}
-        </Formik>
+        <Text variant="headlineLarge">Namaste 🙏</Text>
       </View>
+      <Formik
+        initialValues={initSignupValues}
+        validationSchema={signupValidationSchema}
+        onSubmit={onFormSubmit}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <>
+            <View style={styles.inputContainer}>
+              <TextInput
+                label="Name"
+                onChangeText={handleChange('name')}
+                onBlur={handleBlur('name')}
+                value={values.name}
+                error={!!(touched.name && errors.name)}
+              />
+              {touched.name && errors.name && (
+                <Text style={styles.errorText}>{errors.name}</Text>
+              )}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                label="Password"
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                secureTextEntry
+                error={!!(touched.password && errors.password)}
+              />
+              {touched.password && errors.password && (
+                <Text style={styles.errorText}>{errors.password}</Text>
+              )}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                label="Confirm Password"
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                value={values.confirmPassword}
+                secureTextEntry
+                error={!!(touched.confirmPassword && errors.confirmPassword)}
+              />
+              {touched.confirmPassword && errors.confirmPassword && (
+                <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+              )}
+            </View>
+
+            <Button
+              onPress={() => handleSubmit()}
+              disabled={isLoading}
+              style={styles.button}>
+              {isLoading ? (
+                <ActivityIndicator animating={true} />
+              ) : (
+                <Text variant="bodyLarge">Signup 📚</Text>
+              )}
+            </Button>
+          </>
+        )}
+      </Formik>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   section: {
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 16,
+    paddingHorizontal: 16,
   },
-  subSection: {
-    marginTop: 4,
-    marginBottom: 8,
+  inputContainer: {
+    marginVertical: 8,
+    paddingHorizontal: 16,
   },
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 16,
   },
   errorText: {
     color: 'red',
+    marginTop: 8,
+    paddingHorizontal: 16,
+  },
+  button: {
+    marginVertical: 16,
+    marginHorizontal: 16,
   },
 });
 

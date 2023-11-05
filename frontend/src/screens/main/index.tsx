@@ -4,6 +4,8 @@ import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigat
 
 import Home from './home';
 import Settings from './settings';
+import Notebook from './notebook';
+import Records from './records';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -20,8 +22,8 @@ const MainScreenNavigator = (): JSX.Element => {
         }}
       />
       <Tab.Screen
-        name="Records"
-        component={Home}
+        name="Notebook"
+        component={Notebook}
         options={{
           tabBarIcon: ({color}) => (
             <MaterialCommunityIcons
@@ -33,8 +35,8 @@ const MainScreenNavigator = (): JSX.Element => {
         }}
       />
       <Tab.Screen
-        name="Budget"
-        component={Home}
+        name="Records"
+        component={Records}
         options={{
           tabBarIcon: ({color}) => (
             <MaterialCommunityIcons

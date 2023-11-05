@@ -19,7 +19,7 @@ func getAccount(w http.ResponseWriter, r *http.Request){
 }
 
 func getAccounts(w http.ResponseWriter, r *http.Request){
-	accounts, err := sql.Queries.GetAccounts(r.Context(), chi.URLParam(r, "userId"))
+	accounts, err := sql.Queries.GetAccounts(r.Context(), chi.URLParam(r, "id"))
 	if err != nil {
 		api.SendResponse(w, http.StatusInternalServerError, "error", err.Error())
 		return

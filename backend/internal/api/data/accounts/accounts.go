@@ -4,7 +4,7 @@ import "github.com/go-chi/chi/v5"
 
 func initRoutes(accountsRouter *chi.Mux){
 	accountsRouter.Post("/", createAccount)
-	accountsRouter.Get("/{userId:[0-9a-f\\-]+}", getAccounts)
+	accountsRouter.Get("/user/{id:[0-9a-f\\-]+}", getAccounts)
 	accountsRouter.Get("/{id:[0-9a-f\\-]+}", getAccount)
 	accountsRouter.Put("/{id:[0-9a-f\\-]+}", updateAccount)
 	accountsRouter.Delete("/{id:[0-9a-f\\-]+}", deleteAccount)

@@ -1,16 +1,17 @@
-/**
- * @format
- */
-
 import React from 'react';
-import {Text, useTheme} from 'react-native-paper';
-import {SafeAreaView} from 'react-native';
+import {useTheme} from 'react-native-paper';
+import {SafeAreaView, ScrollView} from 'react-native';
+import LogoutCard from './components/logoutCard';
+import ToggleThemeCard from './components/toggleThemeCard';
 
 const Settings = (): JSX.Element => {
   const theme = useTheme();
   return (
-    <SafeAreaView style={{backgroundColor: theme.colors.background}}>
-      <Text>Settings</Text>
+    <SafeAreaView>
+      <ScrollView>
+        <LogoutCard />
+        <ToggleThemeCard />
+      </ScrollView>
     </SafeAreaView>
   );
 };

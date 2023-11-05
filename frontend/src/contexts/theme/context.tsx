@@ -1,10 +1,21 @@
 import React, {createContext} from 'react';
 
 import {CHANGE_THEME, Theme, ThemeAction} from './type';
+import {LIGHT_THEME} from './data';
 
-export const ThemeContext = createContext<Theme | null>(null);
-export const ThemeDispatchContext =
-  createContext<React.Dispatch<ThemeAction> | null>(null);
+const shutUpTheme: Theme = {
+  theme: LIGHT_THEME,
+};
+
+const shutupThemeAction: ThemeAction = {
+  type: '',
+  theme: LIGHT_THEME,
+};
+
+export const ThemeContext = createContext<Theme>(shutUpTheme);
+export const ThemeDispatchContext = createContext<React.Dispatch<ThemeAction>>(
+  () => shutupThemeAction,
+);
 
 export const themeReducer = (themeState: Theme, action: ThemeAction): Theme => {
   switch (action.type) {
